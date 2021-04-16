@@ -11,9 +11,9 @@
 import config
 
 import sys
-import urllib
-import urllib2
-import httplib
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.client
 import re
 import xml.etree.ElementTree as ET
 
@@ -38,8 +38,8 @@ def call(sessionID):
 def send_xml(target_url, xml_request):
   #Send target_url and xml_request to cms server, result is what was returned
   #NOTE! you must specify the header properly, or you will get an error returned!
-  req = urllib2.Request(target_url, xml_request)
+  req = urllib.request.Request(target_url, xml_request.encode())
   req.add_header('Content-Type','text/plain;charset=UTF-8')
-  result = urllib2.urlopen(req).read()
+  result = urllib.request.urlopen(req).read()
   #if you get no errors, assume you are logged out. Might want to check CMS to make sure it worked!
 

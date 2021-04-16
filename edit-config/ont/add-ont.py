@@ -12,7 +12,7 @@ import sys,os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import config, login, logout
 
-import urllib, urllib2, httplib, re
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, http.client, re
 import xml.dom.minidom 
 
 def connect():
@@ -77,27 +77,28 @@ def pulldata(sessionID, gpon_type, gpon_adminState, gpon_subScribeID, gpon_ontPr
 </soapenv:Envelope>
    """ % (config.nodename, config.username, sessionID, gpon_type, gpon_adminState, gpon_ontProfile, gpon_fsan, gpon_subScribeID.replace("&", "&amp;"), gpon_desc.replace("&", "&amp;"))
 
-   request = urllib2.Request(target_url, xml_request)
+   print(xml_request)
+   request = urllib.request.Request(target_url, xml_request.encode())
    request.add_header('Content-Type','text/plain;charset=UTF-8')
    #result = urllib2.urlopen(request).read()
-   result = urllib2.urlopen(request)
+   result = urllib.request.urlopen(request)
    #print result
    output =  xml.dom.minidom.parse(result)
-   print output.toprettyxml()
+   print(output.toprettyxml())
    result.close()
    #parseSession(result)
 
 
 
 if __name__== "__main__":
-   if len(sys.argv) <> 7:
-      print "Usage:", sys.argv[0]," <type> <admin-state> <subscribe-id> <ont-profile> <fsan> <description>"
-      print "Type options - Usually 'Ont'"
-      print "Admin-State, enable, disable, enable-no-alarm"
-      print "SubScribeID, is the id for the subscriber id field"
-      print "Fsan or serial, 6 digits base 16"
-      print "Ont-Profile, the ID for custom or standard template"
-      print "Description, field for descriptions"
+   if len(sys.argv) != 7:
+      print("Usage:", sys.argv[0]," <type> <admin-state> <subscribe-id> <ont-profile> <fsan> <description>")
+      print("Type options - Usually 'Ont'")
+      print("Admin-State, enable, disable, enable-no-alarm")
+      print("SubScribeID, is the id for the subscriber id field")
+      print("Fsan or serial, 6 digits base 16")
+      print("Ont-Profile, the ID for custom or standard template")
+      print("Description, field for descriptions")
       sys.exit(1)
    gpon_type = sys.argv[1]
    gpon_adminState = sys.argv[2]

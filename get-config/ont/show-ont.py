@@ -12,7 +12,7 @@ import sys,os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import config, login, logout
 
-import urllib, urllib2, httplib, re
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, http.client, re
 import xml.dom.minidom 
 
 def connect():
@@ -49,23 +49,23 @@ def pulldata(sessionID, gpon_type, gpon_fsan):
 </soapenv:Envelope>
    """ % (config.nodename, config.username, sessionID, gpon_fsan)
 
-   request = urllib2.Request(target_url, xml_request)
+   request = urllib.request.Request(target_url, xml_request.encode())
    request.add_header('Content-Type','text/plain;charset=UTF-8')
    #result = urllib2.urlopen(request).read()
-   result = urllib2.urlopen(request)
+   result = urllib.request.urlopen(request)
    #print result
    output =  xml.dom.minidom.parse(result)
-   print output.toprettyxml()
+   print(output.toprettyxml())
    result.close()
    #parseSession(result)
 
 
 
 if __name__== "__main__":
-   if len(sys.argv) <> 3:
-      print "Usage:", sys.argv[0]," <type> <fsan>"
-      print "Type options - Usually 'Ont'"
-      print "Fsan or serial, 6 digits base 16"
+   if len(sys.argv) != 3:
+      print("Usage:", sys.argv[0]," <type> <fsan>")
+      print("Type options - Usually 'Ont'")
+      print("Fsan or serial, 6 digits base 16")
       sys.exit(1)
    gpon_type = sys.argv[1]
    gpon_fsan = sys.argv[2]

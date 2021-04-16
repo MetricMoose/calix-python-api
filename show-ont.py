@@ -13,19 +13,19 @@ import login
 import logout
 
 import sys
-import urllib, urllib2, httplib, re
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, http.client, re
 from xml.dom.minidom import parse, parseString #for debugging
 
 def connect():
    print("This program will display the status of an ONT in XML")
    print("Opening session with CMS...")
    sessionID = login.call()
-   print("Session ID for your session is "+str(sessionID)+"...")
+   print(("Session ID for your session is "+str(sessionID)+"..."))
 
    return sessionID
 
 def disconnect(sessionID):
-   print("Clossing session "+str(sessionID)+"...")
+   print(("Clossing session "+str(sessionID)+"..."))
    logout.call(sessionID)
    print("Session terminated!")
 
@@ -50,21 +50,21 @@ def pulldata(sessionID, gpon_type, gpon_fsan):
 </soapenv:Envelope>
    """ % (config.nodename, config.username, sessionID, gpon_fsan)
 
-   request = urllib2.Request(target_url, xml_request)
+   request = urllib.request.Request(target_url, xml_request.encode())
    request.add_header('Content-Type','text/plain;charset=UTF-8')
    #result = urllib2.urlopen(request).read()
-   result = urllib2.urlopen(request)
-   print parse( result ).toprettyxml()
+   result = urllib.request.urlopen(request)
+   print(parse( result ).toprettyxml())
    result.close()
    #parseSession(result)
 
 
 
 if __name__== "__main__":
-   if len(sys.argv) <> 3:
-      print "Usage:", sys.argv[0]," <type> <fsan>"
-      print "Type options - Usually 'Ont'"
-      print "Fsan or serial, 6 digits base 16"
+   if len(sys.argv) != 3:
+      print("Usage:", sys.argv[0]," <type> <fsan>")
+      print("Type options - Usually 'Ont'")
+      print("Fsan or serial, 6 digits base 16")
       sys.exit(1)
    gpon_type = sys.argv[1]
    gpon_fsan = sys.argv[2]

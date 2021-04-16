@@ -12,7 +12,7 @@ import sys,os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 import config, login, logout
 
-import urllib, urllib2, httplib, re
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, http.client, re
 import xml.etree.ElementTree as ET
 from xml.dom.minidom import parse, parseString #for debugging
 
@@ -54,9 +54,9 @@ def pullOntId(sessionID, gpon_fsan):
 </soapenv:Envelope>
    """ % (config.nodename, config.username, sessionID, gpon_fsan)
 
-   request = urllib2.Request(target_url, xml_request)
+   request = urllib.request.Request(target_url, xml_request.encode())
    request.add_header('Content-Type','text/plain;charset=UTF-8')
-   resultRead = urllib2.urlopen(request).read()
+   resultRead = urllib.request.urlopen(request).read()
    return parseOntId(resultRead)
 
 def parseOntId(result):
@@ -104,19 +104,19 @@ def createIpHost(sessionID, ont):
 </soapenv:Envelope>
    """ % (config.nodename, config.username, sessionID, ont)
 #   print xml_request;
-   request = urllib2.Request(target_url, xml_request)
+   request = urllib.request.Request(target_url, xml_request.encode())
    request.add_header('Content-Type','text/plain;charset=UTF-8')
  #line below is the one that that causes errors. REmove it
    #resultRead = urllib2.urlopen(request).read()
    #uncommet these to print debug info
-   result = urllib2.urlopen(request)
-   print parse( result ).toprettyxml()
+   result = urllib.request.urlopen(request)
+   print(parse( result ).toprettyxml())
    result.close()
 
 if __name__== "__main__":
-   if len(sys.argv) <> 2:
-      print "Usage:", sys.argv[0]," <fsan> "
-      print "Fsan or serial, 6 digits base 16"
+   if len(sys.argv) != 2:
+      print("Usage:", sys.argv[0]," <fsan> ")
+      print("Fsan or serial, 6 digits base 16")
       sys.exit(1)
    gpon_fsan = sys.argv[1]
 
